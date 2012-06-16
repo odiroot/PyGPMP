@@ -11,7 +11,10 @@ download-sources:
 
 # Should be run under scratchbox or on the device.
 # Running on desktop system will produce incompatible packages.
-build-debs: build-decorator
+build-debs: build-decorator build-validictory
 
 build-decorator:
 	cd decorator; $(DPKG_BUILD)
+
+build-validictory:
+	cd validictory; $(DPKG_BUILD)
