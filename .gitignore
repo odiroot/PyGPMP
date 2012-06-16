@@ -27,12 +27,21 @@ pip-log.txt
 .mr.developer.cfg
 
 # Deps
+deps/*.change
+deps/*.deb
+
 deps/decorator/*
 !deps/decorator/stdeb.cfg
-!debian/control
-!debian/compat
-!debian/changelog
-!debian/rules
-!debian/source/*
-deps/*.changes
-deps/*.deb
+!deps/decorator/debian/control
+!deps/decorator/debian/compat
+!deps/decorator/debian/changelog
+!deps/decorator/debian/rules
+!deps/decorator/debian/source/*
+
+deps/validictory/
+!deps/validictory/debian/control
+!deps/validictory/debian/compat
+!deps/validictory/debian/changelog
+!deps/validictory/debian/rules
+!deps/validictory/debian/source/*
+!deps/validictory/stdeb.cfg
