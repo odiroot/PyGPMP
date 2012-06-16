@@ -25,3 +25,14 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Deps
+deps/decorator/*
+!deps/decorator/stdeb.cfg
+!debian/control
+!debian/compat
+!debian/changelog
+!debian/rules
+!debian/source/*
+deps/*.changes
+deps/*.deb
