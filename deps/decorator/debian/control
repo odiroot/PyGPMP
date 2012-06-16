@@ -1,0 +1,34 @@
+Source: decorator
+Maintainer: Michele Simionato <michele.simionato@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 7), python-support (>= 0.8.4)
+Standards-Version: 3.8.4
+XS-Python-Version: 2.5
+
+Package: python-decorator
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+XB-Python-Version: ${python:Versions}
+Provides: ${python:Provides}
+Description: Better living through Python with decorators
+ Decorator module
+ =================
+ .
+ .
+ :Author: Michele Simionato
+ :E-mail: michele.simionato@gmail.com
+ :Requires: Python 2.4+
+ :Download page: http://pypi.python.org/pypi/decorator
+ :Installation: ``easy_install decorator``
+ :License: BSD license
+ .
+ Installation
+ -------------
+ .
+ If you are lazy, just perform
+ .
+ $ easy_install decorator
+ .
+ which will install just the module on your system. Notice that
+ Python 3 requires the easy_install version of the distribute_ project.
