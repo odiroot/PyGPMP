@@ -1,4 +1,4 @@
-Source: decorator
+Source: python-decorator
 Maintainer: Michele Simionato <michele.simionato@gmail.com>
 Section: python
 Priority: optional
