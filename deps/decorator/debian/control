@@ -1,6 +1,6 @@
 Source: python-decorator
 Maintainer: Michele Simionato <michele.simionato@gmail.com>
-Section: python
+Section: programming
 Priority: optional
 Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 7), python-support (>= 0.8.4)
 Standards-Version: 3.8.4
@@ -8,7 +8,7 @@ XS-Python-Version: 2.5
 
 Package: python-decorator
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}
+Depends: ${misc:Depends}, ${python:Depends}, python2.5
 XB-Python-Version: ${python:Versions}
 Provides: ${python:Provides}
 Description: Better living through Python with decorators
