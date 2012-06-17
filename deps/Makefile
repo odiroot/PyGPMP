@@ -1,5 +1,5 @@
 # Prepare dependencies for Maemo - as far as possible.
-PIP_INSTALL=pip install --upgrade --no-install --build=.
+PIP_INSTALL=pip install --upgrade --force-reinstall --no-deps --no-install --build=.
 DPKG_BUILD=dpkg-buildpackage -rfakeroot -uc -b -d
 
 # Can be run everywhere
