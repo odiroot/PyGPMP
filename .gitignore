@@ -53,3 +53,11 @@ deps/mutagen/
 !deps/mutagen/debian/rules
 !deps/mutagen/debian/source/*
 !deps/mutagen/stdeb.cfg
+
+deps/gmusicapi/
+!deps/gmusicapi/debian/control
+!deps/gmusicapi/debian/compat
+!deps/gmusicapi/debian/changelog
+!deps/gmusicapi/debian/rules
+!deps/gmusicapi/debian/source/*
+!deps/gmusicapi/stdeb.cfg

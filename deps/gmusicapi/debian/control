@@ -8,7 +8,7 @@ XS-Python-Version: 2.5
 
 Package: python-gmusicapi
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python2.5, python-validictory, python-decorator, python-mutagen, python-protobuf, python-decorator (>= 3.3.2) | python3-decorator (>= 3.3.2), python-mutagen (>= 1.2.0), python-protobuf (>= 2.4.0)
+Depends: ${misc:Depends}, ${python:Depends}, python2.5, python-validictory, python-decorator, python-mutagen, python-protobuf, python-decorator (>= 3.3.2) | python3-decorator (>= 3.3.2), python-mutagen (>= 1.2.0), python-protobuf (>= 2.4.0), python-simplejson
 XB-Python-Version: ${python:Versions}
 Provides: ${python:Provides}
 Description: An unofficial api for Google Play Music.
