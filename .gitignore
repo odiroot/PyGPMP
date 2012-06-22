@@ -45,3 +45,11 @@ deps/validictory/
 !deps/validictory/debian/rules
 !deps/validictory/debian/source/*
 !deps/validictory/stdeb.cfg
+
+deps/mutagen/
+!deps/mutagen/debian/control
+!deps/mutagen/debian/compat
+!deps/mutagen/debian/changelog
+!deps/mutagen/debian/rules
+!deps/mutagen/debian/source/*
+!deps/mutagen/stdeb.cfg

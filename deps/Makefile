@@ -6,7 +6,7 @@ DPKG_BUILD=dpkg-buildpackage -rfakeroot -uc -b -d
 download-sources:
 	$(PIP_INSTALL) decorator
 	$(PIP_INSTALL) validictory==0.7.2
-
+	$(PIP_INSTALL) mutagen
 
 
 # Should be run under scratchbox or on the device.
@@ -18,3 +18,7 @@ build-decorator:
 
 build-validictory:
 	cd validictory; $(DPKG_BUILD)
+
+build-mutagen:
+	cd mutagen; $(DPKG_BUILD)
+
