@@ -7,6 +7,7 @@ download-sources:
 	$(PIP_INSTALL) decorator
 	$(PIP_INSTALL) validictory==0.7.2
 	$(PIP_INSTALL) mutagen
+	$(PIP_INSTALL) "https://github.com/odiroot/Unofficial-Google-Music-API/zipball/master#egg=gmusicapi"
 
 
 # Should be run under scratchbox or on the device.
@@ -22,3 +23,5 @@ build-validictory:
 build-mutagen:
 	cd mutagen; $(DPKG_BUILD)
 
+build-gmusicapi:
+	cd gmusicapi; $(DPKG_BUILD)
