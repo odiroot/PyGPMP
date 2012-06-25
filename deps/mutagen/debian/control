@@ -2,7 +2,7 @@ Source: python-mutagen
 Maintainer: Michael Urman <quod-libet-development@groups.google.com>
 Section: programming
 Priority: optional
-Build-Depends: debhelper (>= 7), python-support (>= 0.8.4)
+Build-Depends: debhelper (>= 5), python-support (>= 0.8.4)
 Standards-Version: 3.8.4
 XS-Python-Version: 2.5
 
