@@ -13,6 +13,9 @@ config = {
     "install_requires": ["nose", "gmusicapi"],
     "packages": ["gpmp"],
     "scripts": [],
+    "entry_points": {
+        "console_scripts": ["pygpmp = gpmp.run:main"]
+    },
     "name": "PyGPMP",
 }
 
