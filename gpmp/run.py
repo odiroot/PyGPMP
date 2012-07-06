@@ -1,8 +1,13 @@
 u"""Entry script for the whole GPMP application."""
+import logging
 import sys
 # TODO: Consider using PySide/PyQt fallback for better compatibility.
 from PyQt4.QtGui import QApplication
 from gpmp.windows import MainWindow
+
+
+# Only for development.
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
@@ -12,7 +17,6 @@ def main():
     app.setApplicationName("PyGPMP")
 
     window = MainWindow()
-    window.show()
     return app.exec_()
 
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AccountLogin</class>
+ <widget class="QMainWindow" name="AccountLogin">
+  <property name="windowTitle">
+   <string>Log in to Google Music</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
