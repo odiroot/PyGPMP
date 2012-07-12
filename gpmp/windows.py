@@ -1,6 +1,6 @@
 u"""This module should contain application window classes."""
 from PyQt4.QtCore import QCoreApplication, Qt, QTimer
-from PyQt4.QtGui import QMainWindow, QMessageBox
+from PyQt4.QtGui import QMainWindow, QMessageBox, QLabel
 
 from gpmp.ui.account_login import Ui_AccountLogin
 from gpmp.model import Model
@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle(QCoreApplication.instance().applicationName())
-        self.model = Model()
+        self.model = Model(parent=self)
 
         # TODO: MainWindow ui/pyui.
         try:
@@ -19,11 +19,15 @@ class MainWindow(QMainWindow):
         except:
             pass
         # Show main window and proceed with usual behaviour.
+        self._central = QLabel("Please wait for application"
+            " initialization to finish...", parent=self)
+        self.setCentralWidget(self._central)
         self.show()
-        QTimer.singleShot(50, self.run)
+        QTimer.singleShot(100, self.run)
 
     def run(self):
         # Initialize model.
+        self.model.sig_logged_in.connect(self.show_menu)
         self.model.restore()
         # Open log in window if necessary.
         if not self.model.logged_in:
@@ -32,6 +36,11 @@ class MainWindow(QMainWindow):
     def handle_login(self):
         login_window = LoginWindow(self, model=self.model)
         login_window.show()
+
+    def show_menu(self):
+        # TODO: Logged in -> show some kind of main menu.
+        self.setCentralWidget(None)
+        self._central.deleteLater()
 
 
 class LoginWindow(QMainWindow, Ui_AccountLogin):
