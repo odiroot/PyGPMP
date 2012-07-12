@@ -1,5 +1,5 @@
 u"""This module should contain application window classes."""
-from PyQt4.QtCore import QCoreApplication, Qt
+from PyQt4.QtCore import QCoreApplication, Qt, QTimer
 from PyQt4.QtGui import QMainWindow, QMessageBox
 
 from gpmp.ui.account_login import Ui_AccountLogin
@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
             pass
         # Show main window and proceed with usual behaviour.
         self.show()
-        self.run()
+        QTimer.singleShot(50, self.run)
 
     def run(self):
         # Initialize model.
