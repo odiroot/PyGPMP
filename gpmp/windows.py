@@ -1,31 +1,45 @@
 u"""This module should contain application window classes."""
 from PyQt4.QtCore import QCoreApplication, Qt, QTimer
-from PyQt4.QtGui import QMainWindow, QMessageBox, QLabel
+from PyQt4.QtGui import (QMainWindow, QMessageBox, QLabel, QWidget,
+    QListWidgetItem)
 
 from gpmp.ui.account_login import Ui_AccountLogin
+from gpmp.ui.main_menu import Ui_Menu
+from gpmp.ui.playlists import Ui_Playlists
 from gpmp.model import Model
 
 
 class MainWindow(QMainWindow):
     u"""The main window after app is launched."""
+    _central = None
+
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle(QCoreApplication.instance().applicationName())
+        # All windows will communicate using single model.
         self.model = Model(parent=self)
-
-        # TODO: MainWindow ui/pyui.
+        # Try working in Maemo-specific stacked window mode.
         try:
             self.setAttribute(Qt.WA_Maemo5StackedWindow)
         except:
             pass
-        # Show main window and proceed with usual behaviour.
-        self._central = QLabel("Please wait for application"
-            " initialization to finish...", parent=self)
-        self.setCentralWidget(self._central)
+        # Show main window and proceed with usual behavior.
+        self.__switch_central(QLabel("Please wait for application"
+            " initialization to finish...", parent=self))
         self.show()
-        QTimer.singleShot(100, self.run)
+        # Don't block the main window.
+        QTimer.singleShot(50, self.run)
+
+    def __switch_central(self, widget):
+        u"Clean previous and attach new central window widget."
+        self.setCentralWidget(None)
+        if self._central:
+            self._central.deleteLater()
+        self._central = widget
+        self.setCentralWidget(widget)
 
     def run(self):
+        u"Prepare application model, pass control to other windows."
         # Initialize model.
         self.model.sig_logged_in.connect(self.show_menu)
         self.model.restore()
@@ -34,13 +48,12 @@ class MainWindow(QMainWindow):
             self.handle_login()
 
     def handle_login(self):
-        login_window = LoginWindow(self, model=self.model)
+        u"Allow user to log in with email and password."
+        login_window = LoginWindow(parent=self, model=self.model)
         login_window.show()
 
     def show_menu(self):
-        # TODO: Logged in -> show some kind of main menu.
-        self.setCentralWidget(None)
-        self._central.deleteLater()
+        self.__switch_central(MainMenu(parent=self, model=self.model))
 
 
 class LoginWindow(QMainWindow, Ui_AccountLogin):
@@ -68,3 +81,44 @@ class LoginWindow(QMainWindow, Ui_AccountLogin):
                 "The email or password you provided is invalid.")
         else:
             self.close()
+
+
+class MainMenu(QWidget, Ui_Menu):
+    def __init__(self, parent=None, model=None):
+        QWidget.__init__(self, parent)
+        self.model = model
+        self.setupUi(self)
+        # Connect signals.
+        # TODO: Some cleaning in model before application quits.
+        self.btn_quit.clicked.connect(QCoreApplication.instance().quit)
+        self.btn_playlists.clicked.connect(self.playlists_clicked)
+
+    def playlists_clicked(self):
+        self.model.fetch_playlists()
+        playlists_window = PlaylistsWindow(parent=self.parent(),
+            model=self.model)
+        playlists_window.show()
+
+
+class PlaylistsWindow(QMainWindow, Ui_Playlists):
+    def __init__(self, parent=None, model=None):
+        QMainWindow.__init__(self, parent)
+        self.model = model
+        try:
+            self.setAttribute(Qt.WA_Maemo5StackedWindow)
+        except:
+            pass
+        self.setupUi(self)
+
+    def showEvent(self, ev):
+        u"Display playlists when window is shown."
+        self.__show_playlists_group(self.model.auto_playlists(), self.lst_auto)
+        self.__show_playlists_group(self.model.instant_mixes(),
+            self.lst_instant)
+        self.__show_playlists_group(self.model.custom_playlists(),
+            self.lst_custom)
+
+    def __show_playlists_group(self, group, widget):
+        u"Display single playlists group in a QListWidget."
+        for label, name in group.items():
+            QListWidgetItem(label, widget)

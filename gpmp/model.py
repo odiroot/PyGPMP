@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 class Model(QObject):
     _logged_in = False
     _TOKENS = ["lsid", "sid", "auth"]
+    _playlists = None
 
     sig_logged_in = pyqtSignal()
 
@@ -75,3 +76,22 @@ class Model(QObject):
         # Wrong credentials generate exception.
         except RuntimeError:
             return False
+
+    def fetch_playlists(self):
+        # TODO: Local storage caching.
+        # TODO: Wrap playlists in objects, lazily fetch songs info.
+        self._playlists = self.api.get_all_playlist_ids()
+
+    def __get_playlist(self, name):
+        if not self._playlists:
+            return None
+        return self._playlists[name]
+
+    def auto_playlists(self):
+        return self.__get_playlist("auto")
+
+    def instant_mixes(self):
+        return self.__get_playlist("instant")
+
+    def custom_playlists(self):
+        return self.__get_playlist("user")
