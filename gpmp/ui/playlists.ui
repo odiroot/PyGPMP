@@ -8,39 +8,40 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <widget class="QGroupBox" name="grp_auto">
-      <property name="title">
-       <string>Auto playlists</string>
+     <widget class="QTabWidget" name="tbw_playlists">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QListWidget" name="lst_auto"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="grp_instant">
-      <property name="title">
-       <string>Instant mixes</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QListWidget" name="lst_instant"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="grp_custom">
-      <property name="title">
-       <string>Custom playlists</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QListWidget" name="lst_custom"/>
-       </item>
-      </layout>
+      <widget class="QWidget" name="tab_auto">
+       <attribute name="title">
+        <string>Auto playlists</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QListWidget" name="lst_auto"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_instant">
+       <attribute name="title">
+        <string>Instant mixes</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QListWidget" name="lst_instant"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_custom">
+       <attribute name="title">
+        <string>Custom playlists</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QListWidget" name="lst_custom"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>

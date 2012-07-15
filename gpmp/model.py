@@ -11,6 +11,7 @@ class Model(QObject):
     _logged_in = False
     _TOKENS = ["lsid", "sid", "auth"]
     _playlists = None
+    _user = None
 
     sig_logged_in = pyqtSignal()
 
@@ -27,10 +28,17 @@ class Model(QObject):
     def logged_in(self):
         return self._logged_in
 
+    @property
+    def user(self):
+        return self._user
+
     def read_tokens(self):
         t = {}
         for name in self._TOKENS:
             t[name] = str(self.settings.value("tokens/%s" % name).toString())
+        email = self.settings.value("user/email").toString()
+        if email:
+            self._user = email
         return t
 
     def store_tokens(self, tokens):
@@ -40,9 +48,13 @@ class Model(QObject):
                 self.settings.setValue("tokens/%s" % name, tokens[name])
         else:
             log.info("Tried to save empty session tokens")
+        self.settings.setValue("user/email", self._user)
 
     def purge_tokens(self):
         u"Clear stored tokens."
+        for name in self._TOKENS:
+            self.settings.remove("tokens/%s" % name)
+        self.settings.remove("user/email")
 
     def __tokens_login(self):
         u"Try API initialization with previously acquired tokens."
@@ -68,6 +80,8 @@ class Model(QObject):
             result = self.api.login(email=email, password=password)
             if result:
                 self._logged_in = True
+                # TODO: Consider user class.
+                self._user = email
                 # Remember tokens for the next session.
                 self.store_tokens(self.api.session.client.get_tokens())
                 # Notify listeners about success.

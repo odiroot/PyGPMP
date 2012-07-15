@@ -24,11 +24,13 @@ class MainWindow(QMainWindow):
         except:
             pass
         # Show main window and proceed with usual behavior.
+        self.show()
+
+    def showEvent(self, ev):
         self.__switch_central(QLabel("Please wait for application"
             " initialization to finish...", parent=self))
-        self.show()
         # Don't block the main window.
-        QTimer.singleShot(50, self.run)
+        QTimer.singleShot(200, self.run)
 
     def __switch_central(self, widget):
         u"Clean previous and attach new central window widget."
@@ -92,6 +94,11 @@ class MainMenu(QWidget, Ui_Menu):
         # TODO: Some cleaning in model before application quits.
         self.btn_quit.clicked.connect(QCoreApplication.instance().quit)
         self.btn_playlists.clicked.connect(self.playlists_clicked)
+        # Display info about logged in user.
+        if self.model.user:
+            self.lbl_user.setText("Logged in as: %s" % self.model.user)
+        else:
+            self.lbl_user.setText("Logged in as: unknown")
 
     def playlists_clicked(self):
         self.model.fetch_playlists()
