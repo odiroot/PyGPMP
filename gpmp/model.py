@@ -70,7 +70,7 @@ class Model(QObject):
                 log.info("Successfully logged in with tokens")
                 self.sig_logged_in.emit()
             else:  # Tokens are no longer valid.
-                self.__purge_tokens()
+                self.purge_tokens()
             self._logged_in = result
 
     def login(self, email, password):
