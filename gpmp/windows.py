@@ -25,8 +25,6 @@ class MainWindow(QMainWindow):
             pass
         # Show main window and proceed with usual behavior.
         self.show()
-
-    def showEvent(self, ev):
         self.__switch_central(QLabel("Please wait for application"
             " initialization to finish...", parent=self))
         # Don't block the main window.
@@ -102,9 +100,10 @@ class MainMenu(QWidget, Ui_Menu):
 
     def playlists_clicked(self):
         self.model.fetch_playlists()
-        playlists_window = PlaylistsWindow(parent=self.parent(),
-            model=self.model)
-        playlists_window.show()
+        PlaylistsWindow(parent=self, model=self.model).show()
+
+    def show_playlist(self, playlist):
+        print "Will show playlist: %s" % playlist
 
 
 class PlaylistsWindow(QMainWindow, Ui_Playlists):
@@ -116,8 +115,9 @@ class PlaylistsWindow(QMainWindow, Ui_Playlists):
         except:
             pass
         self.setupUi(self)
+        self.load()
 
-    def showEvent(self, ev):
+    def load(self):
         u"Display playlists when window is shown."
         self.__show_playlists_group(self.model.auto_playlists(), self.lst_auto)
         self.__show_playlists_group(self.model.instant_mixes(),
@@ -128,4 +128,13 @@ class PlaylistsWindow(QMainWindow, Ui_Playlists):
     def __show_playlists_group(self, group, widget):
         u"Display single playlists group in a QListWidget."
         for label, name in group.items():
-            QListWidgetItem(label, widget)
+            item = QListWidgetItem(label, widget)
+            item.name = name
+        widget.itemClicked.connect(self.playlist_clicked)
+
+    def playlist_clicked(self, item):
+        self.close()
+        self.lst_auto.deleteLater()
+        self.lst_instant.deleteLater()
+        self.lst_custom.deleteLater()
+        self.parent().show_playlist(item.name)

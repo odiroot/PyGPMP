@@ -91,10 +91,11 @@ class Model(QObject):
         except RuntimeError:
             return False
 
-    def fetch_playlists(self):
+    def fetch_playlists(self, force=False):
         # TODO: Local storage caching.
         # TODO: Wrap playlists in objects, lazily fetch songs info.
-        self._playlists = self.api.get_all_playlist_ids()
+        if not self._playlists or force:
+            self._playlists = self.api.get_all_playlist_ids()
 
     def __get_playlist(self, name):
         if not self._playlists:
