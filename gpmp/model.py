@@ -97,16 +97,21 @@ class Model(QObject):
         if not self._playlists or force:
             self._playlists = self.api.get_all_playlist_ids()
 
-    def __get_playlist(self, name):
+    def __get_playlist_group(self, name):
+        # Fetch playlist groups from server.
+        self.fetch_playlists()
         if not self._playlists:
             return None
         return self._playlists[name]
 
     def auto_playlists(self):
-        return self.__get_playlist("auto")
+        return self.__get_playlist_group("auto")
 
     def instant_mixes(self):
-        return self.__get_playlist("instant")
+        return self.__get_playlist_group("instant")
 
     def custom_playlists(self):
-        return self.__get_playlist("user")
+        return self.__get_playlist_group("user")
+
+    def get_playlist_songs(self, name):
+        return self.api.get_playlist_songs(name)
