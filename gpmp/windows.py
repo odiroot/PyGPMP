@@ -1,5 +1,5 @@
 u"""This module should contain application window classes."""
-from PyQt4.QtCore import QCoreApplication, Qt, QTimer
+from PyQt4.QtCore import QCoreApplication, Qt
 from PyQt4.QtGui import (QMainWindow, QMessageBox, QLabel, QWidget,
     QListWidgetItem)
 
@@ -7,54 +7,50 @@ from gpmp.ui.account_login import Ui_AccountLogin
 from gpmp.ui.main_menu import Ui_Menu
 from gpmp.ui.playlists import Ui_Playlists
 from gpmp.ui.song_list import Ui_SongList
-from gpmp.model import Model
 
 
-class MainWindow(QMainWindow):
-    u"""The main window after app is launched."""
-    _central = None
-
+class StackedWindow(QMainWindow):
+    u"Maemo-specific stacked window."
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
-        self.setWindowTitle(QCoreApplication.instance().applicationName())
-        # All windows will communicate using single model.
-        self.model = Model(parent=self)
-        # Try working in Maemo-specific stacked window mode.
         try:
             self.setAttribute(Qt.WA_Maemo5StackedWindow)
         except:
             pass
-        # Show main window and proceed with usual behavior.
-        self.show()
-        self.__switch_central(QLabel("Please wait for application"
+
+
+class MainWindow(StackedWindow):
+    u"""The main application window stub."""
+    _central = None
+
+    def __init__(self, parent=None):
+        StackedWindow.__init__(self, parent=parent)
+        self.setWindowTitle(QCoreApplication.instance().applicationName())
+
+    # def run(self):
+    #     u"Prepare application model, pass control to other windows."
+    #     # Initialize model.
+    #     self.model.sig_logged_in.connect(self.show_menu)
+    #     self.model.restore()
+    #     # Open log in window if necessary.
+    #     if not self.model.logged_in:
+    #         self.handle_login()
+
+    # def handle_login(self):
+    #     u"Allow user to log in with email and password."
+    #     login_window = LoginWindow(parent=self, model=self.model)
+    #     login_window.show()
+
+    # def show_menu(self):
+    #     self.__switch_central(MainMenu(parent=self, model=self.model))
+
+
+class InitWindow(MainWindow):
+    u"Splash screen of some sort."
+    def __init__(self, parent=None):
+        super(InitWindow, self).__init__(parent=parent)
+        self.setCentralWidget(QLabel("Please wait for application"
             " initialization to finish...", parent=self))
-        # Don't block the main window.
-        QTimer.singleShot(200, self.run)
-
-    def __switch_central(self, widget):
-        u"Clean previous and attach new central window widget."
-        self.setCentralWidget(None)
-        if self._central:
-            self._central.deleteLater()
-        self._central = widget
-        self.setCentralWidget(widget)
-
-    def run(self):
-        u"Prepare application model, pass control to other windows."
-        # Initialize model.
-        self.model.sig_logged_in.connect(self.show_menu)
-        self.model.restore()
-        # Open log in window if necessary.
-        if not self.model.logged_in:
-            self.handle_login()
-
-    def handle_login(self):
-        u"Allow user to log in with email and password."
-        login_window = LoginWindow(parent=self, model=self.model)
-        login_window.show()
-
-    def show_menu(self):
-        self.__switch_central(MainMenu(parent=self, model=self.model))
 
 
 class LoginWindow(QMainWindow, Ui_AccountLogin):
