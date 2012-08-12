@@ -1,95 +1,109 @@
 u"Application state."
 import logging
-from PyQt4.QtCore import QObject, QSettings, pyqtSignal
+
+from PyQt4.QtCore import QObject, QSettings
 from gmusicapi.api import Api
 
 
 log = logging.getLogger(__name__)
 
 
-class Model(QObject):
+class SettingsWrapper(object):
+    u"Mapping-like wrapper for QSettings."
+    def __init__(self):
+        self.store = QSettings()
+
+    def __getitem__(self, name):
+        return self.store.value(name)
+
+    def __setitem__(self, name, value):
+        return self.store.setValue(name, value)
+
+    def __delitem__(self, name):
+        return self.store.remove(name)
+
+
+class SessionMixin(object):
+    u"The model part responsible for session operations."
     _logged_in = False
     _TOKENS = ["lsid", "sid", "auth"]
-    _playlists = None
-    _user = None
-
-    sig_logged_in = pyqtSignal()
-
-    def __init__(self, parent=None):
-        QObject.__init__(self, parent)
-        self.settings = QSettings()
-        self.api = Api()
-
-    def restore(self):
-        u"Restore state of the model."
-        self.__tokens_login()
 
     @property
     def logged_in(self):
         return self._logged_in
 
-    @property
-    def user(self):
-        return self._user
+    def restore_session(self):
+        u"Try API initialization with previously acquired tokens."
+        t = self.read_tokens()
+        # Check tokens are not empty.
+        if not all(map(t.get, self._TOKENS)):
+            return False
+        # Try logging in with tokens.
+        try:
+            result = self.api.login(tokens=t)
+        except RuntimeError:
+            result = False
+            log.warn("Couldn't login with received tokens")
+        if result:
+            log.info("Successfully logged in with tokens")
+            self._logged_in = True
+        else:  # Tokens are no longer valid.
+            self.purge_tokens()
+        return result
 
     def read_tokens(self):
         t = {}
         for name in self._TOKENS:
-            t[name] = str(self.settings.value("tokens/%s" % name).toString())
-        email = self.settings.value("user/email").toString()
+            t[name] = str(self.settings["tokens/%s" % name].toString())
+        email = self.settings["user/email"].toString()
         if email:
-            self._user = email
+            self._email = email
         return t
 
     def store_tokens(self, tokens):
         u"Store session tokens in application's settings."
         if tokens:
             for name in self._TOKENS:
-                self.settings.setValue("tokens/%s" % name, tokens[name])
+                self.settings["tokens/%s" % name] = tokens[name]
         else:
             log.info("Tried to save empty session tokens")
-        self.settings.setValue("user/email", self._user)
+        self.settings["user/email"] = self._email
 
     def purge_tokens(self):
         u"Clear stored tokens."
         for name in self._TOKENS:
-            self.settings.remove("tokens/%s" % name)
-        self.settings.remove("user/email")
-
-    def __tokens_login(self):
-        u"Try API initialization with previously acquired tokens."
-        t = self.read_tokens()
-        # Check tokens are not empty.
-        if all(map(t.get, self._TOKENS)):
-            try:
-                result = self.api.login(tokens=t)
-            except RuntimeError:
-                result = False
-                log.warn("Couldn't login with received tokens")
-            if result:
-                log.info("Successfully logged in with tokens")
-                self.sig_logged_in.emit()
-            else:  # Tokens are no longer valid.
-                self.purge_tokens()
-            self._logged_in = result
+            del self.settings["tokens/%s" % name]
+        del self.settings["user/email"]
 
     def login(self, email, password):
         u"Initialize API with user's email address and account password."
-        # TODO: For manual (E/P) login enable device registration.
         try:
             result = self.api.login(email=email, password=password)
             if result:
                 self._logged_in = True
                 # TODO: Consider user class.
-                self._user = email
+                self._email = email
                 # Remember tokens for the next session.
                 self.store_tokens(self.api.session.client.get_tokens())
-                # Notify listeners about success.
-                self.sig_logged_in.emit()
             return result
-        # Wrong credentials generate exception.
-        except RuntimeError:
+        except RuntimeError:  # Wrong credentials generate exception.
             return False
+
+
+class Model(QObject, SessionMixin):
+    def __init__(self, parent=None):
+        QObject.__init__(self, parent)
+        self.settings = SettingsWrapper()
+        self.api = Api()
+
+
+## OLD CODE BELOW ##
+class OldModel(QObject):
+    _playlists = None
+
+    @property
+    def user(self):
+        return self._email
 
     def fetch_playlists(self, force=False):
         # TODO: Local storage caching.

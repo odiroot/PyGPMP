@@ -27,41 +27,22 @@ class MainWindow(StackedWindow):
         StackedWindow.__init__(self, parent=parent)
         self.setWindowTitle(QCoreApplication.instance().applicationName())
 
-    # def run(self):
-    #     u"Prepare application model, pass control to other windows."
-    #     # Initialize model.
-    #     self.model.sig_logged_in.connect(self.show_menu)
-    #     self.model.restore()
-    #     # Open log in window if necessary.
-    #     if not self.model.logged_in:
-    #         self.handle_login()
-
-    # def handle_login(self):
-    #     u"Allow user to log in with email and password."
-    #     login_window = LoginWindow(parent=self, model=self.model)
-    #     login_window.show()
-
-    # def show_menu(self):
-    #     self.__switch_central(MainMenu(parent=self, model=self.model))
-
 
 class InitWindow(MainWindow):
     u"Splash screen of some sort."
     def __init__(self, parent=None):
-        super(InitWindow, self).__init__(parent=parent)
+        MainWindow.__init__(self, parent=parent)
         self.setCentralWidget(QLabel("Please wait for application"
             " initialization to finish...", parent=self))
 
 
-class LoginWindow(QMainWindow, Ui_AccountLogin):
-    def __init__(self, parent=None, model=None):
-        QMainWindow.__init__(self, parent)
-        self.model = model
-        try:
-            self.setAttribute(Qt.WA_Maemo5StackedWindow)
-        except:
-            pass
+class LoginWindow(StackedWindow, Ui_AccountLogin):
+    def __init__(self, parent=None, model=None, callback=None):
+        StackedWindow.__init__(self, parent=parent)
         self.setupUi(self)
+
+        self.model = model
+        self.callback = callback
         # Listen for UI events.
         self.btn_login.clicked.connect(self.login_clicked)
 
@@ -79,7 +60,13 @@ class LoginWindow(QMainWindow, Ui_AccountLogin):
         else:
             self.close()
 
+    def closeEvent(self, event):
+        event.accept()
+        if self.callback:
+            self.callback()
 
+
+## OLD CODE BELOW ##
 class MainMenu(QWidget, Ui_Menu):
     def __init__(self, parent=None, model=None):
         QWidget.__init__(self, parent)
