@@ -32,6 +32,12 @@ class SessionMixin(object):
     def logged_in(self):
         return self._logged_in
 
+    @property
+    def email(self):
+        if not hasattr(self, "_email"):
+            return
+        return self._email
+
     def restore_session(self):
         u"Try API initialization with previously acquired tokens."
         t = self.read_tokens()
@@ -95,37 +101,3 @@ class Model(QObject, SessionMixin):
         QObject.__init__(self, parent)
         self.settings = SettingsWrapper()
         self.api = Api()
-
-
-## OLD CODE BELOW ##
-class OldModel(QObject):
-    _playlists = None
-
-    @property
-    def user(self):
-        return self._email
-
-    def fetch_playlists(self, force=False):
-        # TODO: Local storage caching.
-        # TODO: Wrap playlists in objects, lazily fetch songs info.
-        if not self._playlists or force:
-            self._playlists = self.api.get_all_playlist_ids()
-
-    def __get_playlist_group(self, name):
-        # Fetch playlist groups from server.
-        self.fetch_playlists()
-        if not self._playlists:
-            return None
-        return self._playlists[name]
-
-    def auto_playlists(self):
-        return self.__get_playlist_group("auto")
-
-    def instant_mixes(self):
-        return self.__get_playlist_group("instant")
-
-    def custom_playlists(self):
-        return self.__get_playlist_group("user")
-
-    def get_playlist_songs(self, name):
-        return self.api.get_playlist_songs(name)

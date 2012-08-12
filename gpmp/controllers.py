@@ -20,12 +20,12 @@ class MainController(object):
         app.setOrganizationName("Michal Odnous")
         app.setApplicationName("PyGPMP")
         # Initialize application state.
-        self.model = Model()
+        self._model = Model()
 
     def start(self):
         log.debug("Starting MainController")
         # Show app splash screen.
-        self.window = InitWindow()
+        self.window = InitWindow(controller=self)
         self.window.show()
         # Don't block GUI, start after loop runs.
         QTimer.singleShot(200, self.init_session)
@@ -33,16 +33,24 @@ class MainController(object):
         return self.app.exec_()
 
     def init_session(self):
-        if self.model.logged_in:
+        if self._model.logged_in:
             return
         # Try restoring previous session first.
-        if self.model.restore_session():
+        if self._model.restore_session():
             return self.show_main_menu()
 
         # Enforce email/password login.
-        LoginWindow(parent=self.window, model=self.model,
-            callback=lambda: self.model.logged_in and self.show_main_menu()
+        LoginWindow(parent=self.window, controller=self,
+            callback=lambda: self._model.logged_in and self.show_main_menu()
         ).show()
 
+    def model(self):
+        # XXX: This could return some read-only proxy as well.
+        return self._model
+
+    # Pass-through methods #
+    def login(self, email, password):
+        return self._model.login(email, password)
+
     def show_main_menu(self):
-        print "TODO: Main menu"
+        self.window.show_main_menu()
