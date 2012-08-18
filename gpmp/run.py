@@ -1,6 +1,9 @@
 u"""Entry script for the whole GPMP application."""
 import logging
 import os
+import sys
+
+from PyQt4.QtGui import QApplication
 
 from gpmp.controllers import MainController
 
@@ -16,9 +19,18 @@ def setup_logger():
 
 def main():
     setup_logger()
+
+    # Create obligatory Qt context.
+    app = QApplication(sys.argv)
+    # This is needed for settings and phonon.
+    app.setOrganizationName("Michal Odnous")
+    app.setApplicationName("PyGPMP")
+
     # Launch main application controller.
-    controller = MainController()
-    return controller.start()
+    MainController().start()
+
+    # Enter Qt's main loop.
+    return app.exec_()
 
 
 if __name__ == "__main__":

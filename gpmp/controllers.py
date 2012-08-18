@@ -1,6 +1,4 @@
 import logging
-import sys
-from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import QTimer
 
 from gpmp.windows import InitWindow, LoginWindow
@@ -11,26 +9,18 @@ log = logging.getLogger(__name__)
 
 
 class MainController(object):
-    window = None
+    windows = set()
 
     def __init__(self):
-        # Create obligatory Qt context.
-        self.app = app = QApplication(sys.argv)
-        # This is needed for settings and phonon.
-        app.setOrganizationName("Michal Odnous")
-        app.setApplicationName("PyGPMP")
         # Initialize application state.
         self._model = Model()
 
     def start(self):
         log.debug("Starting MainController")
         # Show app splash screen.
-        self.window = InitWindow(controller=self)
-        self.window.show()
+        self.display_window(InitWindow, controller=self)
         # Don't block GUI, start after loop runs.
-        QTimer.singleShot(200, self.init_session)
-        # Enter Qt's main loop.
-        return self.app.exec_()
+        QTimer.singleShot(100, self.init_session)
 
     def init_session(self):
         if self._model.logged_in:
@@ -40,9 +30,20 @@ class MainController(object):
             return self.show_main_menu()
 
         # Enforce email/password login.
-        LoginWindow(parent=self.window, controller=self,
-            callback=lambda: self._model.logged_in and self.show_main_menu()
-        ).show()
+        self.display_window(LoginWindow, controller=self, callback=(lambda:
+            self._model.logged_in and self.show_main_menu()))
+
+    def _show(self, window):
+        u"Store reference to window object and make window visible."
+        self.windows.add(window)
+        window.show()
+
+    def display_window(self, cls, *args, **kwargs):
+        u"""Instantiates given window class with parameters, uses ``_show``
+            to display the window and prevent it from closing due to GC.
+        """
+        window = cls(*args, **kwargs)
+        self._show(window)
 
     def model(self):
         # XXX: This could return some read-only proxy as well.

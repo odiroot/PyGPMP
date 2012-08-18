@@ -15,10 +15,11 @@ class StackedWindowMixin(object):
             pass
 
 
-class InitWindow(QMainWindow):
+class InitWindow(QMainWindow, StackedWindowMixin):
     u"Splash screen of some sort."
     def __init__(self, parent=None, controller=None):
         QMainWindow.__init__(self, parent=parent)
+        StackedWindowMixin.__init__(self)
         self.controller = controller
 
         self.setWindowTitle(QCoreApplication.instance().applicationName())
