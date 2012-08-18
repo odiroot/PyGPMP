@@ -67,11 +67,10 @@ class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
                 "The email or password you provided is invalid.")
         else:
             self.close()
+            # Break reference, so window can be cleaned.
+            self.controller.clean_window(self)
 
     def closeEvent(self, event):
         event.accept()
         if self.callback:
             self.callback()
-
-    def __del__(self):
-        print "DEL login window"

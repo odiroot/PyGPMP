@@ -46,6 +46,11 @@ class MainController(object):
         self._show(window)
         return window
 
+    def clean_window(self, window):
+        u"Remove reference to a window so it can be GC'ed"
+        if window in self.windows:
+            self.windows.remove(window)
+
     def model(self):
         # XXX: This could return some read-only proxy as well.
         return self._model
