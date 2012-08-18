@@ -13,22 +13,34 @@ class StackedWindowMixin(object):
             self.setAttribute(Qt.WA_Maemo5StackedWindow)
         except:
             pass
+        # Dispose of window object after close.
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
 
-class InitWindow(QMainWindow, StackedWindowMixin):
-    u"Splash screen of some sort."
+class SimpleWidgetWindow(QMainWindow, StackedWindowMixin):
     def __init__(self, parent=None, controller=None):
         QMainWindow.__init__(self, parent=parent)
         StackedWindowMixin.__init__(self)
         self.controller = controller
-
         self.setWindowTitle(QCoreApplication.instance().applicationName())
+        self.show_content()
+
+    def show_content(self):
+        pass
+
+
+class InitWindow(SimpleWidgetWindow):
+    u"Splash screen of some sort."
+    def show_content(self):
         self.setCentralWidget(QLabel("Please wait for application"
             " initialization to finish...", parent=self))
 
-    def show_main_menu(self):
-        self._main_menu = MainMenu(parent=self, controller=self.controller)
-        self.setCentralWidget(self._main_menu)
+
+class MenuWindow(SimpleWidgetWindow):
+    u"Window shown after logon. Shows main application actions."
+    def show_content(self):
+        self.setCentralWidget(MainMenu(parent=self,
+            controller=self.controller))
 
 
 class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
@@ -60,3 +72,6 @@ class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
         event.accept()
         if self.callback:
             self.callback()
+
+    def __del__(self):
+        print "DEL login window"

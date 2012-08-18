@@ -1,7 +1,7 @@
 import logging
 from PyQt4.QtCore import QTimer
 
-from gpmp.windows import InitWindow, LoginWindow
+from gpmp.windows import InitWindow, LoginWindow, MenuWindow
 from gpmp.model import Model
 
 
@@ -18,7 +18,7 @@ class MainController(object):
     def start(self):
         log.debug("Starting MainController")
         # Show app splash screen.
-        self.display_window(InitWindow, controller=self)
+        self.init_window = self.display_window(InitWindow, controller=self)
         # Don't block GUI, start after loop runs.
         QTimer.singleShot(100, self.init_session)
 
@@ -44,6 +44,7 @@ class MainController(object):
         """
         window = cls(*args, **kwargs)
         self._show(window)
+        return window
 
     def model(self):
         # XXX: This could return some read-only proxy as well.
@@ -54,4 +55,9 @@ class MainController(object):
         return self._model.login(email, password)
 
     def show_main_menu(self):
-        self.window.show_main_menu()
+        self.display_window(MenuWindow, controller=self)
+        # Scrape splash screen.
+        try:
+            self.init_window.close()
+        except AttributeError:
+            pass
