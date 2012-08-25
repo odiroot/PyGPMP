@@ -4,6 +4,7 @@ from PyQt4.QtGui import QMainWindow, QMessageBox, QLabel
 
 from gpmp.ui.account_login import Ui_AccountLogin
 from gpmp.ui.main_menu import Ui_MainMenu
+from gpmp.ui.init import Ui_InitWindow
 
 
 class StackedWindowMixin(object):
@@ -26,23 +27,11 @@ class TopWindowBase(QMainWindow, StackedWindowMixin):
         self.setWindowTitle(QCoreApplication.instance().applicationName())
 
 
-class SimpleWidgetWindow(QMainWindow, StackedWindowMixin):
-    def __init__(self, parent=None, controller=None):
-        QMainWindow.__init__(self, parent=parent)
-        StackedWindowMixin.__init__(self)
-        self.controller = controller
-        self.setWindowTitle(QCoreApplication.instance().applicationName())
-        self.show_content()
-
-    def show_content(self):
-        pass
-
-
-class InitWindow(SimpleWidgetWindow):
+class InitWindow(TopWindowBase, Ui_InitWindow):
     u"Splash screen of some sort."
-    def show_content(self):
-        self.setCentralWidget(QLabel("Please wait for application"
-            " initialization to finish...", parent=self))
+    def __init__(self, parent=None, controller=None):
+        super(InitWindow, self).__init__(parent=parent, controller=controller)
+        self.setupUi(self)
 
 
 class MenuWindow(TopWindowBase, Ui_MainMenu):
