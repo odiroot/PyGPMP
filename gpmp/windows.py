@@ -3,7 +3,7 @@ from PyQt4.QtCore import QCoreApplication, Qt
 from PyQt4.QtGui import QMainWindow, QMessageBox, QLabel
 
 from gpmp.ui.account_login import Ui_AccountLogin
-from gpmp.widgets import MainMenu
+from gpmp.ui.main_menu import Ui_MainMenu
 
 
 class StackedWindowMixin(object):
@@ -15,6 +15,15 @@ class StackedWindowMixin(object):
             pass
         # Dispose of window object after close.
         self.setAttribute(Qt.WA_DeleteOnClose)
+
+
+class TopWindowBase(QMainWindow, StackedWindowMixin):
+    u"Base for all top level windows with app's title and controller."
+    def __init__(self, parent=None, controller=None):
+        QMainWindow.__init__(self, parent=parent)
+        StackedWindowMixin.__init__(self)
+        self.controller = controller
+        self.setWindowTitle(QCoreApplication.instance().applicationName())
 
 
 class SimpleWidgetWindow(QMainWindow, StackedWindowMixin):
@@ -36,11 +45,14 @@ class InitWindow(SimpleWidgetWindow):
             " initialization to finish...", parent=self))
 
 
-class MenuWindow(SimpleWidgetWindow):
+class MenuWindow(TopWindowBase, Ui_MainMenu):
     u"Window shown after logon. Shows main application actions."
-    def show_content(self):
-        self.setCentralWidget(MainMenu(parent=self,
-            controller=self.controller))
+    def __init__(self, parent=None, controller=None):
+        super(MenuWindow, self).__init__(parent=parent, controller=controller)
+        # Prepare window contents.
+        self.setupUi(self)
+        self.lbl_user.setText("Logged in as: %s" % (
+            controller.model().email or "unknown"))
 
 
 class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
