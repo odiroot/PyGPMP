@@ -1,10 +1,11 @@
 u"""This module should contain application window classes."""
 from PyQt4.QtCore import QCoreApplication, Qt
-from PyQt4.QtGui import QMainWindow, QMessageBox, QLabel
+from PyQt4.QtGui import QMainWindow, QMessageBox, QPixmap
 
 from gpmp.ui.account_login import Ui_AccountLogin
 from gpmp.ui.main_menu import Ui_MainMenu
 from gpmp.ui.init import Ui_InitWindow
+from gpmp import get_asset
 
 
 class StackedWindowMixin(object):
@@ -32,6 +33,7 @@ class InitWindow(TopWindowBase, Ui_InitWindow):
     def __init__(self, parent=None, controller=None):
         super(InitWindow, self).__init__(parent=parent, controller=controller)
         self.setupUi(self)
+        self.lbl_tape.setPixmap(QPixmap(get_asset("media-tape.png")))
 
 
 class MenuWindow(TopWindowBase, Ui_MainMenu):

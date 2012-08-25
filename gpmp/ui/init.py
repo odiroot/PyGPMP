@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/init.ui'
 #
-# Created: Sat Aug 25 18:53:33 2012
+# Created: Sat Aug 25 19:24:47 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,6 +21,17 @@ class Ui_InitWindow(object):
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.lbl_tape = QtGui.QLabel(self.centralwidget)
+        self.lbl_tape.setText(_fromUtf8(""))
+        self.lbl_tape.setObjectName(_fromUtf8("lbl_tape"))
+        self.horizontalLayout.addWidget(self.lbl_tape)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setObjectName(_fromUtf8("label"))
         self.verticalLayout.addWidget(self.label)
@@ -30,6 +41,5 @@ class Ui_InitWindow(object):
         QtCore.QMetaObject.connectSlotsByName(InitWindow)
 
     def retranslateUi(self, InitWindow):
-        InitWindow.setWindowTitle(QtGui.QApplication.translate("InitWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("InitWindow", "Please wait for application initialization to finish...", None, QtGui.QApplication.UnicodeUTF8))
 

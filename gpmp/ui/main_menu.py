@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/main_menu.ui'
 #
-# Created: Sat Aug 25 18:34:28 2012
+# Created: Sat Aug 25 19:25:54 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,7 +38,6 @@ class Ui_MainMenu(object):
         QtCore.QMetaObject.connectSlotsByName(MainMenu)
 
     def retranslateUi(self, MainMenu):
-        MainMenu.setWindowTitle(QtGui.QApplication.translate("MainMenu", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
         self.lbl_user.setText(QtGui.QApplication.translate("MainMenu", "Logged in as:", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_playlists.setText(QtGui.QApplication.translate("MainMenu", "Show playlists", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_quit.setText(QtGui.QApplication.translate("MainMenu", "Quit", None, QtGui.QApplication.UnicodeUTF8))
