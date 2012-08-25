@@ -1,5 +1,5 @@
 import logging
-from PyQt4.QtCore import QTimer
+from PyQt4.QtCore import QTimer, QCoreApplication
 
 from gpmp.windows import InitWindow, LoginWindow, MenuWindow
 from gpmp.model import Model
@@ -66,3 +66,7 @@ class MainController(object):
             self.init_window.close()
         except AttributeError:
             pass
+
+    def quit(self):
+        # Just quit the application the Qt's way.
+        QCoreApplication.instance().quit()

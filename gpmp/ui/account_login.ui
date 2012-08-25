@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>AccountLogin</class>
  <widget class="QMainWindow" name="AccountLogin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>197</width>
+    <height>167</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Log in to Google Music</string>
   </property>
@@ -30,12 +38,18 @@
         <property name="text">
          <string>Email</string>
         </property>
+        <property name="buddy">
+         <cstring>edt_email</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_password">
         <property name="text">
          <string>Password</string>
+        </property>
+        <property name="buddy">
+         <cstring>edt_password</cstring>
         </property>
        </widget>
       </item>
@@ -59,5 +73,22 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>edt_password</sender>
+   <signal>returnPressed()</signal>
+   <receiver>btn_login</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>121</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

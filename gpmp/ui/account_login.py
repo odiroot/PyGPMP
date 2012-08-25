@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gpmp/ui/account_login.ui'
+# Form implementation generated from reading ui file 'ui/account_login.ui'
 #
-# Created: Thu Jul 12 13:40:47 2012
+# Created: Sat Aug 25 19:43:24 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,6 +17,7 @@ except AttributeError:
 class Ui_AccountLogin(object):
     def setupUi(self, AccountLogin):
         AccountLogin.setObjectName(_fromUtf8("AccountLogin"))
+        AccountLogin.resize(197, 167)
         self.centralwidget = QtGui.QWidget(AccountLogin)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -46,8 +47,11 @@ class Ui_AccountLogin(object):
         self.btn_login.setObjectName(_fromUtf8("btn_login"))
         self.verticalLayout.addWidget(self.btn_login)
         AccountLogin.setCentralWidget(self.centralwidget)
+        self.lbl_email.setBuddy(self.edt_email)
+        self.lbl_password.setBuddy(self.edt_password)
 
         self.retranslateUi(AccountLogin)
+        QtCore.QObject.connect(self.edt_password, QtCore.SIGNAL(_fromUtf8("returnPressed()")), self.btn_login.click)
         QtCore.QMetaObject.connectSlotsByName(AccountLogin)
 
     def retranslateUi(self, AccountLogin):
