@@ -54,7 +54,9 @@ class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
             return QMessageBox.critical(self, "Missing credentials",
                 "You have to provide your email and password.")
 
+        self.btn_login.setEnabled(False)  # Disable during API call.
         if not self.controller.login(email, password):
+            self.btn_login.setEnabled(True)
             return QMessageBox.critical(self, "Wrong credentials",
                 "The email or password you provided is invalid.")
         else:
