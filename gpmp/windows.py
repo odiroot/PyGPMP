@@ -1,10 +1,11 @@
 u"""This module should contain application window classes."""
-from PyQt4.QtCore import QCoreApplication, Qt, pyqtSlot
-from PyQt4.QtGui import QMainWindow, QMessageBox, QPixmap
+from PyQt4.QtCore import QCoreApplication, Qt, pyqtSlot, QObject
+from PyQt4.QtGui import QMainWindow, QMessageBox, QPixmap, QListWidgetItem
 
 from gpmp.ui.account_login import Ui_AccountLogin
-from gpmp.ui.main_menu import Ui_MainMenu
 from gpmp.ui.init import Ui_InitWindow
+from gpmp.ui.main_menu import Ui_MainMenu
+from gpmp.ui.playlists import Ui_Playlists
 from gpmp import get_asset
 
 
@@ -83,3 +84,34 @@ class MenuWindow(TopWindowBase, Ui_MainMenu):
     def on_btn_quit_clicked(self):
         u"Handle quit button click."
         self.controller.quit()
+
+    @pyqtSlot()
+    def on_btn_auto_lists_clicked(self):
+        self.controller.show_auto_playlists(self)
+
+
+class ListingWindow(TopWindowBase, Ui_Playlists):
+    def __init__(self, kind, parent=None, controller=None):
+        self.kind = kind
+        super(ListingWindow, self).__init__(parent=parent,
+            controller=controller)
+        self.setupUi(self)
+        self.setWindowTitle("%s playlists" % kind.capitalize())
+        # Fetch playlist listing and update UI.
+        self.fill_listing()
+
+    def fill_listing(self):
+        playlists = self.controller.model().get_playlist_ids(self.kind)
+        self.lst_lists.clear()
+
+        for name, pid in playlists.items():
+            item = QListWidgetItem(name, self.lst_lists)
+            item.playlist_id = pid  # For click callback.
+
+    @pyqtSlot(QListWidgetItem)
+    def on_lst_lists_itemClicked(self, item):
+        print "Clicked", item.text()
+
+    def closeEvent(self, event):
+        event.accept()
+        self.controller.clean_window(self)

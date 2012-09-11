@@ -1,7 +1,7 @@
 import logging
 from PyQt4.QtCore import QTimer, QCoreApplication
 
-from gpmp.windows import InitWindow, LoginWindow, MenuWindow
+from gpmp.windows import InitWindow, LoginWindow, MenuWindow, ListingWindow
 from gpmp.model import Model
 
 
@@ -55,10 +55,6 @@ class MainController(object):
         # XXX: This could return some read-only proxy as well.
         return self._model
 
-    # Pass-through methods #
-    def login(self, email, password):
-        return self._model.login(email, password)
-
     def show_main_menu(self):
         self.display_window(MenuWindow, controller=self)
         # Scrape splash screen.
@@ -67,6 +63,16 @@ class MainController(object):
         except AttributeError:
             pass
 
+    # Pass-through methods #
+    def login(self, email, password):
+        return self._model.login(email, password)
+
     def quit(self):
         # Just quit the application the Qt's way.
         QCoreApplication.instance().quit()
+
+    ## Playlists ## TODO: move to other controller?
+
+    def show_auto_playlists(self, parent=None):
+        self.display_window(ListingWindow, kind="auto", parent=parent,
+            controller=self)

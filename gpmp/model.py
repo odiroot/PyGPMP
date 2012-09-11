@@ -96,7 +96,18 @@ class SessionMixin(object):
             return False
 
 
-class Model(QObject, SessionMixin):
+class PlaylistMixin(object):
+    def get_playlist_ids(self, kind):
+        # For validity sake.
+        assert kind in ["auto", "user"], "Wrong playlist kind"
+        # Ignore unwanted kind.
+        kwargs = dict(auto=False, user=False)
+        kwargs[kind] = True
+        result = self.api.get_all_playlist_ids(**kwargs)
+        return result[kind]
+
+
+class Model(QObject, SessionMixin, PlaylistMixin):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
         self.settings = SettingsWrapper()

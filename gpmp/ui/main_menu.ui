@@ -12,9 +12,16 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btn_playlists">
+     <widget class="QPushButton" name="btn_user_lists">
       <property name="text">
-       <string>Show playlists</string>
+       <string>Show user playlists</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_auto_lists">
+      <property name="text">
+       <string>Show auto playlists</string>
       </property>
      </widget>
     </item>
