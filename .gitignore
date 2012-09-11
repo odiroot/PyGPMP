@@ -1,4 +1,4 @@
-*.py[co]
+py[co]
 
 # Packages
 *.egg
@@ -61,3 +61,11 @@ deps/gmusicapi/
 !deps/gmusicapi/debian/rules
 !deps/gmusicapi/debian/source/*
 !deps/gmusicapi/stdeb.cfg
+
+deps/chardet/
+!deps/chardet/debian/control
+!deps/chardet/debian/compat
+!deps/chardet/debian/changelog
+!deps/chardet/debian/rules
+!deps/chardet/debian/source/*
+!deps/chardet/stdeb.cfg
