@@ -8,11 +8,12 @@ download-sources:
 	$(PIP_INSTALL) validictory==0.7.2
 	$(PIP_INSTALL) mutagen
 	$(PIP_INSTALL) "https://github.com/odiroot/Unofficial-Google-Music-API/zipball/master#egg=gmusicapi"
+	$(PIP_INSTALL) chardet
 
 
 # Should be run under scratchbox or on the device.
 # Running on desktop system will produce incompatible packages.
-build-debs: build-decorator build-validictory
+build-debs: build-decorator build-validictory build-mutagen build-gmusicapi build-chardet
 
 build-decorator:
 	cd decorator; $(DPKG_BUILD)
@@ -25,3 +26,6 @@ build-mutagen:
 
 build-gmusicapi:
 	cd gmusicapi; $(DPKG_BUILD)
+
+build-chardet:
+	cd chardet; $(DPKG_BUILD)
