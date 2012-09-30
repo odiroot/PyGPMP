@@ -1,11 +1,13 @@
 u"""This module should contain application window classes."""
-from PyQt4.QtCore import QCoreApplication, Qt, pyqtSlot, QObject
-from PyQt4.QtGui import QMainWindow, QMessageBox, QPixmap, QListWidgetItem
+from PyQt4.QtCore import QCoreApplication, Qt, pyqtSlot
+from PyQt4.QtGui import (QMainWindow, QMessageBox, QPixmap, QListWidgetItem,
+    QDesktopWidget)
 
 from gpmp.ui.account_login import Ui_AccountLogin
 from gpmp.ui.init import Ui_InitWindow
 from gpmp.ui.main_menu import Ui_MainMenu
 from gpmp.ui.playlists import Ui_Playlists
+from gpmp.ui.song_list import Ui_SongList
 from gpmp import get_asset
 
 
@@ -15,17 +17,27 @@ class StackedWindowMixin(object):
         try:
             self.setAttribute(Qt.WA_Maemo5StackedWindow)
         except:
-            pass
+            self.center_on_screen()  # Fallback on desktop.
         # Dispose of window object after close.
         self.setAttribute(Qt.WA_DeleteOnClose)
 
+    def center_on_screen(self):
+        resolution = QDesktopWidget().screenGeometry()
+        self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
+            (resolution.height() / 2) - (self.frameSize().height() / 2))
 
-class TopWindowBase(QMainWindow, StackedWindowMixin):
-    u"Base for all top level windows with app's title and controller."
+
+class StackedWindowBase(QMainWindow, StackedWindowMixin):
     def __init__(self, parent=None, controller=None):
         QMainWindow.__init__(self, parent=parent)
         StackedWindowMixin.__init__(self)
         self.controller = controller
+
+
+class TopWindowBase(StackedWindowBase):
+    u"Base for all top level windows with app's title and controller."
+    def __init__(self, **kwargs):
+        StackedWindowBase.__init__(self, **kwargs)
         self.setWindowTitle(QCoreApplication.instance().applicationName())
 
 
@@ -37,14 +49,11 @@ class InitWindow(TopWindowBase, Ui_InitWindow):
         self.lbl_tape.setPixmap(QPixmap(get_asset("media-tape.png")))
 
 
-class LoginWindow(QMainWindow, StackedWindowMixin, Ui_AccountLogin):
-    def __init__(self, parent=None, controller=None, callback=None):
-        QMainWindow.__init__(self, parent=parent)
-        StackedWindowMixin.__init__(self)
-        self.setupUi(self)
-
-        self.controller = controller
+class LoginWindow(StackedWindowBase, Ui_AccountLogin):
+    def __init__(self, callback=None, **kwargs):
         self.callback = callback
+        StackedWindowBase.__init__(self, **kwargs)
+        self.setupUi(self)
 
     @pyqtSlot()
     def on_btn_login_clicked(self):
@@ -90,12 +99,12 @@ class MenuWindow(TopWindowBase, Ui_MainMenu):
         self.controller.show_auto_playlists(self)
 
 
-class ListingWindow(TopWindowBase, Ui_Playlists):
-    def __init__(self, kind, parent=None, controller=None):
-        self.kind = kind
-        super(ListingWindow, self).__init__(parent=parent,
-            controller=controller)
+class ListingWindow(StackedWindowBase, Ui_Playlists):
+    def __init__(self, kind, **kwargs):
+        StackedWindowBase.__init__(self, **kwargs)
         self.setupUi(self)
+
+        self.kind = kind
         self.setWindowTitle("%s playlists" % kind.capitalize())
         # Fetch playlist listing and update UI.
         self.fill_listing()
@@ -110,8 +119,32 @@ class ListingWindow(TopWindowBase, Ui_Playlists):
 
     @pyqtSlot(QListWidgetItem)
     def on_lst_lists_itemClicked(self, item):
-        print "Clicked", item.text()
+        self.controller.show_playlist(item.playlist_id, self)
 
     def closeEvent(self, event):
         event.accept()
         self.controller.clean_window(self)
+
+
+class PlaylistWindow(StackedWindowBase, Ui_SongList):
+    def __init__(self, playlist_id, **kwargs):
+        StackedWindowBase.__init__(self, **kwargs)
+        self.setupUi(self)
+
+        self.playlist_id = playlist_id
+        self.fill_playlist()
+
+    def fill_playlist(self):
+        songs = self.controller.model().get_playlist_songs(self.playlist_id)
+        self.list.clear()
+
+        for song in songs:
+            artist = song.get("artist", song.get("albumArtist",
+                "Unkown Artist"))
+            title = song.get("title", "Unknown Title")
+            item = QListWidgetItem("%s - %s" % (artist, title), self.list)
+            item.song_id = song["id"]
+
+    @pyqtSlot(QListWidgetItem)
+    def on_list_itemClicked(self, item):
+        print "Clicked on", item.text(), item.song_id

@@ -1,7 +1,8 @@
 import logging
 from PyQt4.QtCore import QTimer, QCoreApplication
 
-from gpmp.windows import InitWindow, LoginWindow, MenuWindow, ListingWindow
+from gpmp.windows import (InitWindow, LoginWindow, MenuWindow, ListingWindow,
+    PlaylistWindow)
 from gpmp.model import Model
 
 
@@ -76,3 +77,7 @@ class MainController(object):
     def show_auto_playlists(self, parent=None):
         self.display_window(ListingWindow, kind="auto", parent=parent,
             controller=self)
+
+    def show_playlist(self, playlist_id, parent=None):
+        self.display_window(PlaylistWindow, playlist_id=playlist_id,
+            parent=parent, controller=self)

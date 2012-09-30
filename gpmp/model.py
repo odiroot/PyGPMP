@@ -106,6 +106,9 @@ class PlaylistMixin(object):
         result = self.api.get_all_playlist_ids(**kwargs)
         return result[kind]
 
+    def get_playlist_songs(self, playlist_id):
+        return self.api.get_playlist_songs(playlist_id)
+
 
 class Model(QObject, SessionMixin, PlaylistMixin):
     def __init__(self, parent=None):
