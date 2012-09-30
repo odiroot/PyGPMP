@@ -1,5 +1,6 @@
 import logging
-from PyQt4.QtCore import QTimer, QCoreApplication
+from PyQt4.QtCore import QTimer, QCoreApplication, QUrl
+from PyQt4.phonon import Phonon
 
 from gpmp.windows import (InitWindow, LoginWindow, MenuWindow, ListingWindow,
     PlaylistWindow)
@@ -15,6 +16,7 @@ class MainController(object):
     def __init__(self):
         # Initialize application state.
         self._model = Model()
+        self._player = Player(model=self._model)
 
     def start(self):
         log.debug("Starting MainController")
@@ -81,3 +83,19 @@ class MainController(object):
     def show_playlist(self, playlist_id, parent=None):
         self.display_window(PlaylistWindow, playlist_id=playlist_id,
             parent=parent, controller=self)
+
+    def play_song(self, song_id):
+        self._player.play_song(song_id)
+
+
+class Player(object):
+    def __init__(self, model):
+        self.model = model
+        self.media = Phonon.createPlayer(Phonon.MusicCategory)
+
+    def play_song(self, song_id):
+        url = self.model.get_stream_url(song_id)
+        print "Playing", song_id
+
+        self.media.setCurrentSource(Phonon.MediaSource(url))
+        self.media.play()

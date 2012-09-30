@@ -147,4 +147,4 @@ class PlaylistWindow(StackedWindowBase, Ui_SongList):
 
     @pyqtSlot(QListWidgetItem)
     def on_list_itemClicked(self, item):
-        print "Clicked on", item.text(), item.song_id
+        self.controller.play_song(item.song_id)
