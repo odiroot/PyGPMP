@@ -12,8 +12,6 @@ unexport CXXFLAGS
 unexport FFLAGS
 unexport LDFLAGS
 
-#exports specified using stdeb Setup-Env-Vars:
-export DH_OPTIONS=--buildsystem=python_distutils
 PATH := /usr/bin:$(PATH)
 SBOX_REDIRECT_IGNORE := $(SBOX_REDIRECT_IGNORE):/usr/bin/python
 export PATH SBOX_REDIRECT_IGNORE
@@ -26,7 +24,7 @@ export PATH SBOX_REDIRECT_IGNORE
 binary: binary-indep
 
 binary-indep: build
-    dh binary-indep
+	dh binary-indep
 
-    dh_desktop
+	dh_desktop
 

@@ -1,5 +1,5 @@
 Source: pygpmp
-Maintainer: Michal Odnous
+Maintainer: Michal Odnous <odi.root@gmail.com>
 Section: multimedia
 Priority: optional
 Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 5), python-support (>= 0.8.4)
