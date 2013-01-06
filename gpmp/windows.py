@@ -163,12 +163,19 @@ class QueueWindow(PlaylistWindow, Ui_SongList):
 
     def fill_playlist(self):
         songs = self.controller.model().get_queue_songs()
-        self.list.clear()
+        current = self.controller.model().get_queue_current()
+
+        self.list.clear()  # Purge old list.
 
         for song_id, title in songs:
+            # Higlight currently played song.
+            if current and current[0] == song_id:
+                title = "* %s" % title
+
             item = QListWidgetItem(title, self.list)
             item.song_id = song_id
 
     @pyqtSlot(QListWidgetItem)
     def on_list_itemClicked(self, item):
         self.controller.play_by_id(item.song_id)
+        self.fill_playlist()  # Refresh playlist.

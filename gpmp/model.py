@@ -122,6 +122,9 @@ class QueueMixin(object):
         u"Adds song to internal playlist."
         self._queue.append((song_id, title))
 
+    def get_queue_current(self):
+        return self._current_song
+
     def get_queue_next(self):
         u"Returns next (in order) song to be played."
         if not self._queue:  # Empty playlist.
