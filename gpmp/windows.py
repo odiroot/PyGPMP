@@ -99,6 +99,10 @@ class MenuWindow(TopWindowBase, Ui_MainMenu):
         self.controller.show_auto_playlists(self)
 
     @pyqtSlot()
+    def on_btn_user_lists_clicked(self):
+        self.controller.show_user_playlists(self)
+
+    @pyqtSlot()
     def on_btn_now_clicked(self):
         self.controller.show_queue(self)
 
@@ -160,6 +164,8 @@ class QueueWindow(PlaylistWindow, Ui_SongList):
         StackedWindowBase.__init__(self, **kwargs)
         self.setupUi(self)
         self.fill_playlist()
+        # TODO: Set this during UI design.
+        self.setWindowTitle("Now playing")
 
     def fill_playlist(self):
         songs = self.controller.model().get_queue_songs()

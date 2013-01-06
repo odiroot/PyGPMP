@@ -81,6 +81,9 @@ class MainController(object):
     def show_auto_playlists(self, parent=None):
         self.display_window(ListingWindow, kind="auto", parent=parent)
 
+    def show_user_playlists(self, parent=None):
+        self.display_window(ListingWindow, kind="user", parent=parent)
+
     def show_playlist(self, playlist_id, parent=None):
         self.display_window(PlaylistWindow, playlist_id=playlist_id,
             parent=parent, controller=self._player)
