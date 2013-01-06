@@ -1,5 +1,5 @@
 Source: pygpmp
-Maintainer: Michal Odnous <odi.root@gmail.com>
+Maintainer: Michal Odnous
 Section: multimedia
 Priority: optional
 Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 5), python-support (>= 0.8.4)
@@ -8,7 +8,7 @@ XS-Python-Version: 2.5
 
 Package: pygpmp
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python2.5 python-gmusicapi
+Depends: ${misc:Depends}, ${python:Depends}, python2.5, python-gmusicapi
 XB-Python-Version: ${python:Versions}
 Provides: ${python:Provides}
 Description: Unofficial Google Play Music player
