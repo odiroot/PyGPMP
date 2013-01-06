@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gpmp/ui/main_menu.ui'
 #
-# Created: Tue Sep 11 21:00:25 2012
+# Created: Sun Jan  6 13:25:50 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,6 +17,7 @@ except AttributeError:
 class Ui_MainMenu(object):
     def setupUi(self, MainMenu):
         MainMenu.setObjectName(_fromUtf8("MainMenu"))
+        MainMenu.resize(139, 154)
         self.centralwidget = QtGui.QWidget(MainMenu)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -30,6 +31,9 @@ class Ui_MainMenu(object):
         self.btn_auto_lists = QtGui.QPushButton(self.centralwidget)
         self.btn_auto_lists.setObjectName(_fromUtf8("btn_auto_lists"))
         self.verticalLayout.addWidget(self.btn_auto_lists)
+        self.btn_now = QtGui.QPushButton(self.centralwidget)
+        self.btn_now.setObjectName(_fromUtf8("btn_now"))
+        self.verticalLayout.addWidget(self.btn_now)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.btn_quit = QtGui.QPushButton(self.centralwidget)
@@ -44,5 +48,6 @@ class Ui_MainMenu(object):
         self.lbl_user.setText(QtGui.QApplication.translate("MainMenu", "Logged in as:", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_user_lists.setText(QtGui.QApplication.translate("MainMenu", "Show user playlists", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_auto_lists.setText(QtGui.QApplication.translate("MainMenu", "Show auto playlists", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_now.setText(QtGui.QApplication.translate("MainMenu", "Playing now", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_quit.setText(QtGui.QApplication.translate("MainMenu", "Quit", None, QtGui.QApplication.UnicodeUTF8))
 

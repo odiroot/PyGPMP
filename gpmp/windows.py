@@ -98,6 +98,10 @@ class MenuWindow(TopWindowBase, Ui_MainMenu):
     def on_btn_auto_lists_clicked(self):
         self.controller.show_auto_playlists(self)
 
+    @pyqtSlot()
+    def on_btn_now_clicked(self):
+        self.controller.show_queue(self)
+
 
 class ListingWindow(StackedWindowBase, Ui_Playlists):
     def __init__(self, kind, **kwargs):
@@ -148,3 +152,23 @@ class PlaylistWindow(StackedWindowBase, Ui_SongList):
     @pyqtSlot(QListWidgetItem)
     def on_list_itemClicked(self, item):
         self.controller.play_song(item.song_id, item.text())
+
+
+# TODO: Replace with player UI.
+class QueueWindow(PlaylistWindow, Ui_SongList):
+    def __init__(self, **kwargs):
+        StackedWindowBase.__init__(self, **kwargs)
+        self.setupUi(self)
+        self.fill_playlist()
+
+    def fill_playlist(self):
+        songs = self.controller.model().get_queue_songs()
+        self.list.clear()
+
+        for song_id, title in songs:
+            item = QListWidgetItem(title, self.list)
+            item.song_id = song_id
+
+    @pyqtSlot(QListWidgetItem)
+    def on_list_itemClicked(self, item):
+        self.controller.play_by_id(item.song_id)

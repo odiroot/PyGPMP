@@ -113,29 +113,42 @@ class PlaylistMixin(object):
         return self.api.get_stream_url(song_id)
 
 
-class Model(QObject, SessionMixin, PlaylistMixin):
+class QueueMixin(object):
+    u"Acts as a 'now playing' playlist."
+    _queue = []
+    _current_song = None
+
+    def queue_song(self, song_id, title):
+        u"Adds song to internal playlist."
+        self._queue.append((song_id, title))
+
+    def get_queue_next(self):
+        u"Returns next (in order) song to be played."
+        if not self._queue:  # Empty playlist.
+            return None
+
+        if self._current_song is None:
+            return self._queue[0]
+        else:
+            idx = self._queue.index(self._current_song) + 1
+            next = min(idx, len(self._queue) - 1)
+            return self._queue[next]
+
+    def get_queue_songs(self):
+        u"Returns copy of internal playlist for display."
+        return self._queue[:]
+
+    def set_queue_current(self, song_id):
+        for (sid, title) in self._queue:
+            if sid == song_id:
+                self._current_song = (sid, title)
+                return  # Prevent fall-through.
+        # Fallback to no current song.
+        self._current_song = None
+
+
+class Model(QObject, SessionMixin, PlaylistMixin, QueueMixin):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
         self.settings = SettingsWrapper()
         self.api = Api()
-        self.queue = Queue()
-
-
-class Queue(object):
-    u"Acts as a 'now playing' playlist."
-    def __init__(self):
-        self._l = []
-        self._current = None
-
-    def append(self, song_id, title):
-        u"Adds song to internal playlist."
-        self._l.append((song_id, title))
-
-    def get_next(self):
-        u"Returns next (in order) song to be played."
-        if not self._l:  # Empty playlist.
-            return None
-
-        if self._current is None:
-            self._current = self._l[0]
-        return self._current

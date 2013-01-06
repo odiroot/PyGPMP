@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MainMenu</class>
  <widget class="QMainWindow" name="MainMenu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>139</width>
+    <height>154</height>
+   </rect>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -22,6 +30,13 @@
      <widget class="QPushButton" name="btn_auto_lists">
       <property name="text">
        <string>Show auto playlists</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_now">
+      <property name="text">
+       <string>Playing now</string>
       </property>
      </widget>
     </item>
