@@ -118,3 +118,24 @@ class Model(QObject, SessionMixin, PlaylistMixin):
         QObject.__init__(self, parent)
         self.settings = SettingsWrapper()
         self.api = Api()
+        self.queue = Queue()
+
+
+class Queue(object):
+    u"Acts as a 'now playing' playlist."
+    def __init__(self):
+        self._l = []
+        self._current = None
+
+    def append(self, song_id, title):
+        u"Adds song to internal playlist."
+        self._l.append((song_id, title))
+
+    def get_next(self):
+        u"Returns next (in order) song to be played."
+        if not self._l:  # Empty playlist.
+            return None
+
+        if self._current is None:
+            self._current = self._l[0]
+        return self._current

@@ -1,5 +1,5 @@
 import logging
-from PyQt4.QtCore import QTimer, QCoreApplication, QUrl
+from PyQt4.QtCore import QTimer, QCoreApplication
 from PyQt4.phonon import Phonon
 
 from gpmp.windows import (InitWindow, LoginWindow, MenuWindow, ListingWindow,
@@ -84,18 +84,32 @@ class MainController(object):
         self.display_window(PlaylistWindow, playlist_id=playlist_id,
             parent=parent, controller=self)
 
-    def play_song(self, song_id):
-        self._player.play_song(song_id)
+    def play_song(self, song_id, title):
+        self._player.play_song(song_id, title)
 
 
 class Player(object):
     def __init__(self, model):
         self.model = model
+        # Media playing interface provided by Phonon stack.
         self.media = Phonon.createPlayer(Phonon.MusicCategory)
 
-    def play_song(self, song_id):
-        url = self.model.get_stream_url(song_id)
-        print "Playing", song_id
+    def play_song(self, song_id, title):
+        u"""Plays song by external request (not from current queue)
+            Song is first added to 'now playing' list.
+        """
+        self.model.queue.append(song_id, title)
 
+        # Start playback if no song is currently playing.
+        if self.media.state() != Phonon.PlayingState:
+            next = self.model.queue.get_next()
+            if not next:  # Queue is empty.
+                return
+
+            self._load_source(next[0])
+            self.media.play()
+
+    def _load_source(self, song_id):
+        u"Gets song url from id, provides as a source for media player."
+        url = self.model.get_stream_url(song_id)
         self.media.setCurrentSource(Phonon.MediaSource(url))
-        self.media.play()
