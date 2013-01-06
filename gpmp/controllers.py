@@ -95,6 +95,8 @@ class Player(object):
         self._model = model
         # Media playing interface provided by Phonon stack.
         self._media = Phonon.createPlayer(Phonon.MusicCategory)
+        # Connect signal to progress song playback.
+        self._media.aboutToFinish.connect(self.play_next)
 
     def model(self):
         return self._model
@@ -112,6 +114,7 @@ class Player(object):
         u"""Plays song by external request (not from current queue)
             Song is first added to 'now playing' list.
         """
+        log.info("Queuing song %s with id %s" % (title, song_id))
         self._model.queue_song(song_id, title)
         if not self.is_playing:
             self.play_next()
@@ -120,6 +123,7 @@ class Player(object):
         u"Play next song from the queue."
         next = self._model.get_queue_next()
         if next:
+            log.info("Playing song %s with id %s" % next)
             self.play_by_id(next[0])
 
     def play_by_id(self, song_id):
