@@ -10,7 +10,7 @@ config = {
     "url": "https://github.com/odiroot/PyGPMP",
     "version": "0.1",
     "license": "BSD",
-    "install_requires": ["nose", "gmusicapi"],
+    "install_requires": ["gmusicapi"],
     "packages": ["gpmp"],
     "scripts": [],
     "entry_points": {

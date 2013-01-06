@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0.0
+Encoding=UTF-8
+Name=PyGPMP
+Comment=A simple Google Play Music client written in Python using PyQt.
+Exec=pygpmp
+Type=Application
+X-Osso-Type=application/x-executable
